@@ -1,0 +1,12 @@
+cn\kmbeast\config\WebConfigTests.class
+cn\kmbeast\utils\JsonUtilsTest.class
+cn\kmbeast\PersonalHealthApplicationTests.class
+cn\kmbeast\utils\DateUtilTest.class
+cn\kmbeast\aop\ProtectorAspectTests.class
+cn\kmbeast\utils\JwtUtilTest.class
+cn\kmbeast\utils\JwtUtilTests.class
+cn\kmbeast\mapper\UserMapperTests.class
+cn\kmbeast\service\UserServiceTests.class
+cn\kmbeast\pojo\entity\UserTest.class
+cn\kmbeast\controller\UserControllerTests.class
+cn\kmbeast\aop\ProtectorAspectTests$1TestController.class

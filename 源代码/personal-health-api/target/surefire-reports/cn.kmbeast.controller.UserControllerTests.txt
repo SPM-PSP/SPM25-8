@@ -1,0 +1,40 @@
+-------------------------------------------------------------------------------
+Test set: cn.kmbeast.controller.UserControllerTests
+-------------------------------------------------------------------------------
+Tests run: 11, Failures: 9, Errors: 0, Skipped: 0, Time elapsed: 1.399 s <<< FAILURE! - in cn.kmbeast.controller.UserControllerTests
+testQuery  Time elapsed: 0.234 s  <<< FAILURE!
+java.lang.AssertionError: JSON path "$.code" expected:<200> but was:<400>
+	at cn.kmbeast.controller.UserControllerTests.testQuery(UserControllerTests.java:293)
+
+testBatchDelete  Time elapsed: 0.015 s  <<< FAILURE!
+java.lang.AssertionError: JSON path "$.code" expected:<200> but was:<400>
+	at cn.kmbeast.controller.UserControllerTests.testBatchDelete(UserControllerTests.java:262)
+
+testAuth  Time elapsed: 0.016 s  <<< FAILURE!
+java.lang.AssertionError: JSON path "$.code" expected:<200> but was:<400>
+	at cn.kmbeast.controller.UserControllerTests.testAuth(UserControllerTests.java:149)
+
+testGetById  Time elapsed: 0.018 s  <<< FAILURE!
+java.lang.AssertionError: JSON path "$.code" expected:<200> but was:<400>
+	at cn.kmbeast.controller.UserControllerTests.testGetById(UserControllerTests.java:170)
+
+testUpdatePassword  Time elapsed: 0.014 s  <<< FAILURE!
+java.lang.AssertionError: JSON path "$.code" expected:<200> but was:<400>
+	at cn.kmbeast.controller.UserControllerTests.testUpdatePassword(UserControllerTests.java:128)
+
+testDaysQuery  Time elapsed: 0.015 s  <<< FAILURE!
+java.lang.AssertionError: JSON path "$.code" expected:<200> but was:<400>
+	at cn.kmbeast.controller.UserControllerTests.testDaysQuery(UserControllerTests.java:310)
+
+testInsert  Time elapsed: 0.013 s  <<< FAILURE!
+java.lang.AssertionError: JSON path "$.code" expected:<200> but was:<400>
+	at cn.kmbeast.controller.UserControllerTests.testInsert(UserControllerTests.java:194)
+
+testBackUpdate  Time elapsed: 0.016 s  <<< FAILURE!
+java.lang.AssertionError: JSON path "$.code" expected:<200> but was:<400>
+	at cn.kmbeast.controller.UserControllerTests.testBackUpdate(UserControllerTests.java:243)
+
+testUpdate  Time elapsed: 0.013 s  <<< FAILURE!
+java.lang.AssertionError: JSON path "$.code" expected:<200> but was:<400>
+	at cn.kmbeast.controller.UserControllerTests.testUpdate(UserControllerTests.java:218)
+

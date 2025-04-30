@@ -1,0 +1,20 @@
+-------------------------------------------------------------------------------
+Test set: cn.kmbeast.mapper.UserMapperTests
+-------------------------------------------------------------------------------
+Tests run: 4, Failures: 0, Errors: 4, Skipped: 0, Time elapsed: 4.821 s <<< FAILURE! - in cn.kmbeast.mapper.UserMapperTests
+testQuery  Time elapsed: 1.671 s  <<< ERROR!
+org.springframework.transaction.CannotCreateTransactionException: Could not open JDBC Connection for transaction; nested exception is java.sql.SQLException: Access denied for user 'root'@'localhost' (using password: YES)
+Caused by: java.sql.SQLException: Access denied for user 'root'@'localhost' (using password: YES)
+
+testBatchDelete  Time elapsed: 0.991 s  <<< ERROR!
+org.springframework.transaction.CannotCreateTransactionException: Could not open JDBC Connection for transaction; nested exception is java.sql.SQLException: Access denied for user 'root'@'localhost' (using password: YES)
+Caused by: java.sql.SQLException: Access denied for user 'root'@'localhost' (using password: YES)
+
+testInsertAndGetByActive  Time elapsed: 1.02 s  <<< ERROR!
+org.springframework.transaction.CannotCreateTransactionException: Could not open JDBC Connection for transaction; nested exception is java.sql.SQLException: Access denied for user 'root'@'localhost' (using password: YES)
+Caused by: java.sql.SQLException: Access denied for user 'root'@'localhost' (using password: YES)
+
+testUpdate  Time elapsed: 1.016 s  <<< ERROR!
+org.springframework.transaction.CannotCreateTransactionException: Could not open JDBC Connection for transaction; nested exception is java.sql.SQLException: Access denied for user 'root'@'localhost' (using password: YES)
+Caused by: java.sql.SQLException: Access denied for user 'root'@'localhost' (using password: YES)
+
