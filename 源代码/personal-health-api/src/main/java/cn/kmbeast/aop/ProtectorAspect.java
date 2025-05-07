@@ -32,7 +32,6 @@ public class ProtectorAspect {
      *
      * @param proceedingJoinPoint 连接点
      * @return Object
-     * @author 【B站：程序员晨星】
      */
     @Around("@annotation(cn.kmbeast.aop.Protector)")
     public Object auth(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
