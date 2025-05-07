@@ -68,6 +68,4 @@ public class ProtectorAspect {
         LocalThreadHolder.clear();
         return result;
     }
-
-
 }
