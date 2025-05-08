@@ -48,11 +48,11 @@ public class UserServiceTests {
         // Set necessary fields for loginDTO
         
         User user = User.builder()
-                .id(1)
-                .userAccount("testaccount")
-                .userName("testuser")
-                .userPwd("password")
-                .userRole(1) // 假设USER角色是1
+                .id(13)
+                .userAccount("chenhao")
+                .userName("陈浩")
+                .userPwd("14e1b600b1fd579f47433b88e8d85291")
+                .userRole(2) // 假设USER角色是1
                 .isLogin(false)
                 .build();
                 
@@ -135,8 +135,8 @@ public class UserServiceTests {
     void testUpdatePassword_Success() {
         // Prepare test data
         Map<String, String> pwdMap = new HashMap<>();
-        pwdMap.put("oldPwd", "oldpassword");
-        pwdMap.put("newPwd", "newpassword");
+        pwdMap.put("oldPwd", "123456");
+        pwdMap.put("newPwd", "12345");
         
         // Mock thread local user ID
         try {
@@ -144,7 +144,7 @@ public class UserServiceTests {
             // This is a simplified approach - in a real test you might need a more sophisticated solution
             User user = User.builder()
                     .id(1)
-                    .userPwd("oldpassword")
+                    .userPwd("123456")
                     .build();
             
             when(userMapper.getByActive(any(User.class))).thenReturn(user);
