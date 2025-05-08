@@ -6,11 +6,7 @@ import cn.kmbeast.pojo.api.ApiResult;
 import cn.kmbeast.pojo.api.Result;
 import cn.kmbeast.pojo.dto.update.UserLoginDTO;
 import cn.kmbeast.pojo.dto.update.UserRegisterDTO;
-import cn.kmbeast.pojo.dto.update.UserUpdateDTO;
-import cn.kmbeast.pojo.em.LoginStatusEnum;
-import cn.kmbeast.pojo.em.RoleEnum;
 import cn.kmbeast.pojo.entity.User;
-import cn.kmbeast.pojo.vo.UserVO;
 import cn.kmbeast.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,7 +15,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,122 +38,100 @@ public class UserServiceTests {
 
     @Test
     void testUserLogin_Success() {
-        // Prepare test data
         UserLoginDTO loginDTO = new UserLoginDTO();
-        // Set necessary fields for loginDTO
-        
+        loginDTO.setUserAccount("chenhao");
+        loginDTO.setUserPwd("14e1b600b1fd579f47433b88e8d85291");
+
         User user = User.builder()
-                .id(1)
-                .userAccount("testaccount")
-                .userName("testuser")
-                .userPwd("password")
-                .userRole(1) // 假设USER角色是1
+                .id(13)
+                .userAccount("chenhao")
+                .userName("陈浩")
+                .userPwd("14e1b600b1fd579f47433b88e8d85291")
+                .userRole(2)
                 .isLogin(false)
                 .build();
-                
-        // Mock the mapper's response
+
         when(userMapper.getByActive(any(User.class))).thenReturn(user);
-        
-        // Call service method
+
         Result<Object> result = userService.login(loginDTO);
-        
-        // Verify the result
+
         assertEquals(200, result.getCode());
         assertEquals("登录成功", result.getMsg());
-        Object data = ((ApiResult<Object>)result).getData();
-        assertNotNull(data);
+        assertNotNull(((ApiResult<Object>) result).getData());
     }
-    
+
     @Test
     void testUserLogin_AccountNotExist() {
-        // Prepare test data
         UserLoginDTO loginDTO = new UserLoginDTO();
-        // Set necessary fields for loginDTO
-        
-        // Mock the mapper's response for non-existent user
+        loginDTO.setUserAccount("nonexist");
+        loginDTO.setUserPwd("somepassword");
+
         when(userMapper.getByActive(any(User.class))).thenReturn(null);
-        
-        // Call service method
+
         Result<Object> result = userService.login(loginDTO);
-        
-        // Verify the result
+
         assertEquals(400, result.getCode());
         assertEquals("账号不存在", result.getMsg());
     }
-    
+
     @Test
     void testRegisterUser_Success() {
-        // Prepare test data
         UserRegisterDTO registerDTO = new UserRegisterDTO();
-        // Set necessary fields for registerDTO
-        
-        // Mock the mapper's response when checking for duplicate username and account
+        registerDTO.setUserName("testuser");
+        registerDTO.setUserAccount("testaccount");
+        registerDTO.setUserPwd("testpassword");
+
         when(userMapper.getByActive(any(User.class))).thenReturn(null);
-        
-        // Call service method
+
         Result<String> result = userService.register(registerDTO);
-        
-        // Verify the result
+
         assertEquals(200, result.getCode());
         assertEquals("注册成功", result.getMsg());
-        
-        // Verify that insert was called
+
         verify(userMapper, times(1)).insert(any(User.class));
     }
-    
+
     @Test
     void testRegisterUser_DuplicateUsername() {
-        // Prepare test data
         UserRegisterDTO registerDTO = new UserRegisterDTO();
-        // Set necessary fields for registerDTO
-        
-        // Mock the mapper's response for an existing username
+        registerDTO.setUserName("existingname");
+        registerDTO.setUserAccount("existingaccount");
+        registerDTO.setUserPwd("password");
+
         User existingUser = User.builder()
                 .id(1)
                 .userName("existingname")
                 .build();
-        
+
         when(userMapper.getByActive(any(User.class))).thenReturn(existingUser);
-        
-        // Call service method
+
         Result<String> result = userService.register(registerDTO);
-        
-        // Verify the result
+
         assertEquals(400, result.getCode());
         assertEquals("用户名已经被使用，请换一个", result.getMsg());
-        
-        // Verify that insert was not called
+
         verify(userMapper, never()).insert(any(User.class));
     }
-    
+
     @Test
     void testUpdatePassword_Success() {
-        // Prepare test data
         Map<String, String> pwdMap = new HashMap<>();
         pwdMap.put("oldPwd", "oldpassword");
         pwdMap.put("newPwd", "newpassword");
-        
-        // Mock thread local user ID
-        try {
-            // Use reflection to set the ThreadLocal value
-            // This is a simplified approach - in a real test you might need a more sophisticated solution
-            User user = User.builder()
-                    .id(1)
-                    .userPwd("oldpassword")
-                    .build();
-            
-            when(userMapper.getByActive(any(User.class))).thenReturn(user);
-            
-            // Call service method
-            Result<String> result = userService.updatePwd(pwdMap);
-            
-            // Verify the result
-            assertEquals(200, result.getCode());
-            
-            // Verify that update was called
-            verify(userMapper, times(1)).update(any(User.class));
-        } finally {
-            // Clean up
-        }
+
+        User user = User.builder()
+                .id(1)
+                .userPwd("oldpassword")
+                .userRole(1)
+                .build();
+
+        LocalThreadHolder.setUserId(user.getId(), user.getUserRole());
+
+        when(userMapper.getByActive(any(User.class))).thenReturn(user);
+
+        Result<String> result = userService.updatePwd(pwdMap);
+
+        assertEquals(200, result.getCode());
+        verify(userMapper, times(1)).update(any(User.class));
     }
-} 
+}
