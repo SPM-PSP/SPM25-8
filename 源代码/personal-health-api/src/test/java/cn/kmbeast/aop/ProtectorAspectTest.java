@@ -129,4 +129,51 @@ public class ProtectorAspectTest {
         verify(joinPoint, never()).proceed();
     }
 
+    @Test
+    void testAuthWithInvalidTokenClaimsNull() throws Throwable {
+        // 设置一个非法 token，JwtUtil.fromToken 返回 null
+        String invalidToken = "invalid.token.content";
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addHeader("token", invalidToken);
+        ServletRequestAttributes attributes = new ServletRequestAttributes(request);
+        RequestContextHolder.setRequestAttributes(attributes);
+
+        Object result = protectorAspect.auth(joinPoint);
+
+        assertTrue(result instanceof Result);
+        Result<?> apiResult = (Result<?>) result;
+        assertEquals(400, apiResult.getCode());
+        assertEquals("身份认证失败，请先登录", apiResult.getMsg());
+
+        verify(joinPoint, never()).proceed();
+    }
+
+
+    @Test
+    void testAuthWithNoProtectorAnnotation() throws Throwable {
+        String token = JwtUtil.toToken(1, 1);
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addHeader("token", token);
+        ServletRequestAttributes attributes = new ServletRequestAttributes(request);
+        RequestContextHolder.setRequestAttributes(attributes);
+
+        when(joinPoint.getSignature()).thenReturn(methodSignature);
+
+        // 模拟没有注解的方法
+        Method method = Object.class.getMethod("toString"); // 没有任何注解
+        when(methodSignature.getMethod()).thenReturn(method);
+
+        Object result = protectorAspect.auth(joinPoint);
+
+        assertTrue(result instanceof Result);
+        Result<?> apiResult = (Result<?>) result;
+        assertEquals(400, apiResult.getCode());
+        assertEquals("身份认证失败，请先登录", apiResult.getMsg());
+
+        verify(joinPoint, never()).proceed();
+    }
+
+
 }
