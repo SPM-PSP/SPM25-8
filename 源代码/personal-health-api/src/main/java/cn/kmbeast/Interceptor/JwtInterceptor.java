@@ -45,7 +45,7 @@ public class JwtInterceptor implements HandlerInterceptor {
         }
         String token = request.getHeader("token");
         Claims claims = JwtUtil.fromToken(token);
-        // 解析不成功，直接退回！访问后续资源的可能性都没有！
+        // 解析不成功，直接退回！访问后续资源的可能性都没有
         if (claims == null) {
             Result<String> error = ApiResult.error("身份认证异常，请先登录");
             response.setContentType("application/json;charset=UTF-8");
