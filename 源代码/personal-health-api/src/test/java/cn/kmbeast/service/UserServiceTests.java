@@ -47,11 +47,7 @@ public class UserServiceTests {
                 .userAccount("chenhao")
                 .userName("陈浩")
                 .userPwd("14e1b600b1fd579f47433b88e8d85291")
-<<<<<<< HEAD
                 .userRole(2)
-=======
-                .userRole(2) // 假设USER角色是1
->>>>>>> ab6b53d14d8c3a670e9fcfea60a87c06ded06bed
                 .isLogin(false)
                 .build();
 
@@ -120,7 +116,6 @@ public class UserServiceTests {
     @Test
     void testUpdatePassword_Success() {
         Map<String, String> pwdMap = new HashMap<>();
-<<<<<<< HEAD
         pwdMap.put("oldPwd", "oldpassword");
         pwdMap.put("newPwd", "newpassword");
 
@@ -138,32 +133,25 @@ public class UserServiceTests {
 
         assertEquals(200, result.getCode());
         verify(userMapper, times(1)).update(any(User.class));
-=======
+
         pwdMap.put("oldPwd", "123456");
         pwdMap.put("newPwd", "12345");
-        
-        // Mock thread local user ID
-        try {
-            // Use reflection to set the ThreadLocal value
-            // This is a simplified approach - in a real test you might need a more sophisticated solution
-            User user = User.builder()
-                    .id(1)
-                    .userPwd("123456")
-                    .build();
-            
-            when(userMapper.getByActive(any(User.class))).thenReturn(user);
-            
-            // Call service method
-            Result<String> result = userService.updatePwd(pwdMap);
-            
-            // Verify the result
-            assertEquals(200, result.getCode());
-            
-            // Verify that update was called
-            verify(userMapper, times(1)).update(any(User.class));
-        } finally {
-            // Clean up
-        }
->>>>>>> ab6b53d14d8c3a670e9fcfea60a87c06ded06bed
+
+        // 使用新变量名避免冲突
+        User anotherUser = User.builder()
+                .id(1)
+                .userPwd("123456")
+                .build();
+
+        when(userMapper.getByActive(any(User.class))).thenReturn(anotherUser);
+
+        // 调用服务方法
+        Result<String> result2 = userService.updatePwd(pwdMap);
+
+        // 验证结果
+        assertEquals(200, result2.getCode());
+
+        // 验证 update 方法被调用两次
+        verify(userMapper, times(2)).update(any(User.class));
     }
 }
