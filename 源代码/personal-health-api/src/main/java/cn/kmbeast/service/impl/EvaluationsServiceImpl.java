@@ -40,6 +40,9 @@ public class EvaluationsServiceImpl implements EvaluationsService {
         evaluations.setCommenterId(LocalThreadHolder.getUserId());
         User queryConditionEntity = User.builder().id(LocalThreadHolder.getUserId()).build();
         User user = userMapper.getByActive(queryConditionEntity);
+        if (user == null) {
+            return ApiResult.error("账户不存在");
+        }
         if (user.getIsWord()) {
             return ApiResult.error("账户已被禁言");
         }

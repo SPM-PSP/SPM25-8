@@ -1,4 +1,4 @@
-package cn.kmbeast.service;
+package cn.kmbeast.service.impl;
 
 import cn.kmbeast.context.LocalThreadHolder;
 import cn.kmbeast.mapper.UserMapper;
@@ -7,7 +7,6 @@ import cn.kmbeast.pojo.api.Result;
 import cn.kmbeast.pojo.dto.update.UserLoginDTO;
 import cn.kmbeast.pojo.dto.update.UserRegisterDTO;
 import cn.kmbeast.pojo.entity.User;
-import cn.kmbeast.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
