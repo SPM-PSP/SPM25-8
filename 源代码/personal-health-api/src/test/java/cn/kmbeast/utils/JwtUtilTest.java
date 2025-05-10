@@ -2,63 +2,61 @@ package cn.kmbeast.utils;
 
 import io.jsonwebtoken.Claims;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * JwtUtil工具类测试
- */
-class JwtUtilTest {
+public class JwtUtilTest {
 
     @Test
-    void testToToken() {
-        // 测试生成token
-        Integer userId = 123;
-        Integer userRole = 1;
+    void testToTokenAndFromToken_Valid() {
+        // 生成 token
+        Integer userId = 101;
+        Integer userRole = 2;
         String token = JwtUtil.toToken(userId, userRole);
-        
-        assertNotNull(token);
-        assertTrue(token.length() > 0);
-        assertTrue(token.split("\\.").length == 3); // JWT格式应该有3部分，用.分隔
-    }
-    
-    @Test
-    void testFromToken() {
-        // 生成一个有效的token
-        Integer userId = 123;
-        Integer userRole = 1;
-        String token = JwtUtil.toToken(userId, userRole);
-        
-        // 解析token
+
+        // 解析 token
         Claims claims = JwtUtil.fromToken(token);
-        
-        // 验证解析结果
-        assertNotNull(claims);
+
+        assertNotNull(claims, "Claims should not be null for a valid token");
         assertEquals(userId, claims.get("id", Integer.class));
         assertEquals(userRole, claims.get("role", Integer.class));
         assertEquals("用户认证", claims.getSubject());
     }
-    
+
     @Test
-    void testInvalidToken() {
-        // 测试无效token
-        String invalidToken = "invalid.token.string";
+    void testFromToken_InvalidTokenFormat() {
+        // 模拟非法 token
+        String invalidToken = "not.a.valid.token";
         Claims claims = JwtUtil.fromToken(invalidToken);
-        
-        // 应该返回null
-        assertNull(claims);
+
+        assertNull(claims, "Claims should be null for an invalid token");
     }
-    
+
     @Test
-    void testExpiredToken() {
-        // 注：此测试需要模拟过期token，实际项目中可能需要调整JwtUtil类以支持测试
-        // 此处只是示例，实际实现可能需要调整
-        
-        // 另一种处理方式是证明token包含过期时间
-        Integer userId = 123;
-        Integer userRole = 1;
-        String token = JwtUtil.toToken(userId, userRole);
-        
-        Claims claims = JwtUtil.fromToken(token);
-        assertNotNull(claims.getExpiration());
+    void testFromToken_EmptyToken() {
+        String emptyToken = "";
+        Claims claims = JwtUtil.fromToken(emptyToken);
+
+        assertNull(claims, "Claims should be null for an empty token");
     }
-} 
+
+    @Test
+    void testFromToken_NullToken() {
+        String nullToken = null;
+        Claims claims = JwtUtil.fromToken(nullToken);
+
+        assertNull(claims, "Claims should be null for a null token");
+    }
+
+    // 可选测试：构造一个非法签名 token（用不同 secret 生成），模拟伪造 token 情况
+    @Test
+    void testFromToken_TamperedToken() {
+        // 伪造 token：修改真实 token 内容
+        String token = JwtUtil.toToken(101, 1);
+        // 随便篡改一位
+        String tamperedToken = token.substring(0, token.length() - 2) + "zz";
+
+        Claims claims = JwtUtil.fromToken(tamperedToken);
+        assertNull(claims, "Claims should be null for a tampered token");
+    }
+}
