@@ -278,4 +278,41 @@ public class UserServiceTests {
         assertEquals(200, result.getCode());
         assertNotNull(result.getMsg());
     }
+
+    @Test
+    void testLogin_Failure_WrongPassword() {
+        UserLoginDTO dto = new UserLoginDTO();
+        dto.setUserAccount("testUser");
+        dto.setUserPwd("wrongPwd");
+
+        User dbUser = User.builder().userAccount("testUser").userPwd("correctPwd").build();
+
+        when(userMapper.getByActive(any(User.class))).thenReturn(dbUser);
+
+        Result<?> result = userService.login(dto);
+
+        assertEquals(400, result.getCode());
+        assertEquals("密码错误", result.getMsg());
+    }
+
+    @Test
+    void testLogin_Failure_AlreadyLoggedIn() {
+        UserLoginDTO dto = new UserLoginDTO();
+        dto.setUserAccount("testUser");
+        dto.setUserPwd("correctPwd");
+
+        User dbUser = User.builder()
+                .userAccount("testUser")
+                .userPwd("correctPwd")
+                .isLogin(true) // 用户已登录
+                .build();
+
+        when(userMapper.getByActive(any(User.class))).thenReturn(dbUser);
+
+        Result<?> result = userService.login(dto);
+
+        assertEquals(400, result.getCode());
+        assertEquals("登录状态异常", result.getMsg());
+    }
+
 }
