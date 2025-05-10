@@ -21,6 +21,13 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import cn.kmbeast.pojo.api.PageResult;
+import cn.kmbeast.pojo.dto.query.extend.UserQueryDto;
+import cn.kmbeast.pojo.dto.update.UserUpdateDTO;
+import cn.kmbeast.pojo.vo.UserVO;
+
+import java.time.LocalDateTime;
+import java.util.*;
 
 @SpringBootTest
 public class UserServiceTests {
@@ -153,5 +160,122 @@ public class UserServiceTests {
 
         // 验证 update 方法被调用两次
         verify(userMapper, times(2)).update(any(User.class));
+    }
+
+    @Test
+    void testAuth_Success() {
+        Integer userId = 123;
+        LocalThreadHolder.setUserId(userId,1);
+
+        User mockUser = User.builder().id(userId).userName("TestUser").build();
+        when(userMapper.getByActive(any(User.class))).thenReturn(mockUser);
+
+        Result<UserVO> result = userService.auth();
+
+        assertEquals(200, result.getCode());
+        assertEquals("操作成功", result.getMsg().intern());
+    }
+
+    @Test
+    void testQueryUsers_ReturnsList() {
+        List<User> mockUsers = Arrays.asList(
+                User.builder().id(1).userName("A").build(),
+                User.builder().id(2).userName("B").build()
+        );
+
+        when(userMapper.query(any(UserQueryDto.class))).thenReturn(mockUsers);
+        when(userMapper.queryCount(any(UserQueryDto.class))).thenReturn(mockUsers.size());
+
+        Result<List<User>> result = userService.query(new UserQueryDto());
+
+        assertEquals(200, result.getCode());
+        assertEquals(2, ((PageResult<List<User>>) result).getData().size());
+    }
+
+    @Test
+    void testUpdateUserInfo_Success() {
+        LocalThreadHolder.setUserId(99,1);
+        UserUpdateDTO dto = new UserUpdateDTO();
+        dto.setUserName("UpdatedName");
+
+        Result<String> result = userService.update(dto);
+
+        assertEquals(200, result.getCode());
+        verify(userMapper, times(1)).update(any(User.class));
+    }
+
+    @Test
+    void testBatchDelete_Success() {
+        List<Integer> ids = Arrays.asList(1, 2, 3);
+        Result<String> result = userService.batchDelete(ids);
+
+        assertEquals(200, result.getCode());
+        verify(userMapper, times(1)).batchDelete(ids);
+    }
+
+    @Test
+    void testUpdatePassword_Failure_WrongOldPwd() {
+        LocalThreadHolder.setUserId(99,1);
+        Map<String, String> pwdMap = new HashMap<>();
+        pwdMap.put("oldPwd", "wrong");
+        pwdMap.put("newPwd", "new123");
+
+        User mockUser = User.builder().id(1).userPwd("correct").build();
+        when(userMapper.getByActive(any(User.class))).thenReturn(mockUser);
+
+        Result<String> result = userService.updatePwd(pwdMap);
+
+        assertEquals(400, result.getCode());
+        assertEquals("原始密码验证失败", result.getMsg());
+    }
+
+
+    @Test
+    void testGetUserById() {
+        User mockUser = User.builder().id(1).userName("ChenHao").build();
+        when(userMapper.getByActive(any(User.class))).thenReturn(mockUser);
+
+        Result<UserVO> result = userService.getById(1);
+
+        assertEquals(200, result.getCode());
+        assertEquals("操作成功", result.getMsg().intern());
+    }
+
+    @Test
+    void testInsertUser_Backend() {
+        UserRegisterDTO dto = new UserRegisterDTO();
+        dto.setUserName("backendUser");
+        dto.setUserAccount("backendAcc");
+
+        when(userMapper.getByActive(any(User.class))).thenReturn(null);
+
+        Result<String> result = userService.insert(dto);
+
+        assertEquals(200, result.getCode());
+        verify(userMapper, times(1)).insert(any(User.class));
+    }
+
+    @Test
+    void testBackUpdateUser() {
+        User user = User.builder().id(1).userName("BackUpdate").build();
+
+        Result<String> result = userService.backUpdate(user);
+
+        assertEquals(200, result.getCode());
+        verify(userMapper, times(1)).update(user);
+    }
+
+    @Test
+    void testDaysQuery() {
+        List<User> mockList = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            mockList.add(User.builder().createTime(LocalDateTime.now().minusDays(i)).build());
+        }
+        when(userMapper.query(any(UserQueryDto.class))).thenReturn(mockList);
+
+        Result<?> result = userService.daysQuery(7);
+
+        assertEquals(200, result.getCode());
+        assertNotNull(result.getMsg());
     }
 }
