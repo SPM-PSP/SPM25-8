@@ -15,8 +15,6 @@ let currentHook = 0;
 /** @type {Array<import('./internal').Component>} */
 let afterPaintEffects = [];
 
-let EMPTY = [];
-
 // Cast to use internal Options type
 const options = /** @type {import('./internal').Options} */ (_options);
 
@@ -60,8 +58,7 @@ options._render = vnode => {
 				if (hookItem._nextValue) {
 					hookItem._value = hookItem._nextValue;
 				}
-				hookItem._pendingValue = EMPTY;
-				hookItem._nextValue = hookItem._pendingArgs = undefined;
+				hookItem._pendingArgs = hookItem._nextValue = undefined;
 			});
 		} else {
 			hooks._pendingEffects.forEach(invokeCleanup);
@@ -84,11 +81,7 @@ options.diffed = vnode => {
 			if (hookItem._pendingArgs) {
 				hookItem._args = hookItem._pendingArgs;
 			}
-			if (hookItem._pendingValue !== EMPTY) {
-				hookItem._value = hookItem._pendingValue;
-			}
 			hookItem._pendingArgs = undefined;
-			hookItem._pendingValue = EMPTY;
 		});
 	}
 	previousComponent = currentComponent = null;
@@ -159,7 +152,7 @@ function getHookState(index, type) {
 		});
 
 	if (index >= hooks._list.length) {
-		hooks._list.push({ _pendingValue: EMPTY });
+		hooks._list.push({});
 	}
 
 	return hooks._list[index];
@@ -256,7 +249,7 @@ export function useReducer(reducer, initialState, init) {
 				// We check whether we have components with a nextValue set that
 				// have values that aren't equal to one another this pushes
 				// us to update further down the tree
-				let shouldUpdate = false;
+				let shouldUpdate = hookState._component.props !== p;
 				stateHooks.forEach(hookItem => {
 					if (hookItem._nextValue) {
 						const currentValue = hookItem._value[0];
@@ -266,11 +259,9 @@ export function useReducer(reducer, initialState, init) {
 					}
 				});
 
-				return shouldUpdate || hookState._component.props !== p
-					? prevScu
-						? prevScu.call(this, p, s, c)
-						: true
-					: false;
+				return prevScu
+					? prevScu.call(this, p, s, c) || shouldUpdate
+					: shouldUpdate;
 			}
 
 			currentComponent.shouldComponentUpdate = updateHookState;
@@ -350,10 +341,9 @@ export function useMemo(factory, args) {
 	/** @type {import('./internal').MemoHookState<T>} */
 	const state = getHookState(currentIndex++, 7);
 	if (argsChanged(state._args, args)) {
-		state._pendingValue = factory();
-		state._pendingArgs = args;
+		state._value = factory();
+		state._args = args;
 		state._factory = factory;
-		return state._pendingValue;
 	}
 
 	return state._value;
@@ -433,7 +423,7 @@ export function useId() {
 	const state = getHookState(currentIndex++, 11);
 	if (!state._value) {
 		// Grab either the root node or the nearest async boundary node.
-		/** @type {import('./internal.d').VNode} */
+		/** @type {import('./internal').VNode} */
 		let root = currentComponent._vnode;
 		while (root !== null && !root._mask && root._parent !== null) {
 			root = root._parent;

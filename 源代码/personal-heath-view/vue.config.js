@@ -3,6 +3,7 @@ module.exports = {
     assetsDir: 'static',
     parallel: false,
     publicPath: './',
+    transpileDependencies: [],
     devServer: {
         host: "localhost",
         port: 21091,

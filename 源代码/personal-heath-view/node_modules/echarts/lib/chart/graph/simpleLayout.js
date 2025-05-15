@@ -79,7 +79,7 @@ function _default(ecModel, api) {
         }
       }
 
-      simpleLayoutEdge(data.graph);
+      simpleLayoutEdge(data.graph, seriesModel);
     } else if (!layout || layout === 'none') {
       simpleLayout(seriesModel);
     }

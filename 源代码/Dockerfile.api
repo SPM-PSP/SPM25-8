@@ -1,0 +1,25 @@
+FROM maven:3.8-openjdk-8 as build
+
+WORKDIR /app
+
+# 复制pom文件，先下载依赖
+COPY personal-health-api/pom.xml .
+RUN mvn dependency:go-offline
+
+# 复制源代码并构建
+COPY personal-health-api/src ./src
+RUN mvn package -DskipTests
+
+# 运行阶段
+FROM openjdk:8-jre-slim
+
+WORKDIR /app
+
+# 从构建阶段复制jar文件
+COPY --from=build /app/target/*.jar app.jar
+
+# 暴露端口
+EXPOSE 21090
+
+# 启动命令
+ENTRYPOINT ["java", "-jar", "app.jar"] 
