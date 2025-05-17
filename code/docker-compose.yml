@@ -1,0 +1,53 @@
+version: '3'
+services:
+  db:
+    image: mysql:5.7
+    container_name: personal-health-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 1111
+      MYSQL_DATABASE: personal_health
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d
+      - mysql-data:/var/lib/mysql
+    command:
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --default-authentication-plugin=mysql_native_password
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p1111"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  personal-health-api:
+    build: 
+      context: ./personal-health-api
+      dockerfile: Dockerfile
+    container_name: personal-health-api
+    restart: always
+    ports:
+      - "21090:21090"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/personal_health?characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 1111
+    volumes:
+      - api-uploads:/app/upload
+  personal-heath-view:
+    build:
+      context: ./personal-heath-view
+      dockerfile: Dockerfile
+    container_name: personal-heath-view
+    restart: always
+    ports:
+      - "2717:80"
+    depends_on:
+      - personal-health-api
+volumes:
+  mysql-data:
+  api-uploads: 
