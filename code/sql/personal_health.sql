@@ -253,8 +253,8 @@ CREATE TABLE `user`  (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES (1, 'admin', '程序员辰星', '14e1b600b1fd579f47433b88e8d85291', 'http://localhost:2717//api/health/file/getFile?fileName=d632a99pic_7.jpg', '1343243@qq.com', 1, 0, 0, '2024-07-09 12:53:05');
-INSERT INTO `user` VALUES (3, 'yangshu', '辰星的健康系统', '14e1b600b1fd579f47433b88e8d85291', 'http://localhost:2717//api/health/file/getFile?fileName=99353898.jpg', '1134123@qq.com', 2, 0, 0, '2024-10-07 23:59:31');
+INSERT INTO `user` VALUES (1, 'admin', '程序员', '14e1b600b1fd579f47433b88e8d85291', 'http://localhost:2717//api/health/file/getFile?fileName=d632a99pic_7.jpg', '1343243@qq.com', 1, 0, 0, '2024-07-09 12:53:05');
+INSERT INTO `user` VALUES (3, 'yangshu', '健康系统', '14e1b600b1fd579f47433b88e8d85291', 'http://localhost:2717//api/health/file/getFile?fileName=99353898.jpg', '1134123@qq.com', 2, 0, 0, '2024-10-07 23:59:31');
 INSERT INTO `user` VALUES (8, 'aiqin', '深海', '14e1b600b1fd579f47433b88e8d85291', 'http://localhost:21090/api/personal-heath/v1.0/file/getFile?fileName=b024d50Snipaste_2024-11-29_18-23-12.png', '123@qq.coom', 2, 0, 1, '2024-10-07 23:59:31');
 INSERT INTO `user` VALUES (9, 'wanghai', '大春', '14e1b600b1fd579f47433b88e8d85291', 'http://localhost:21090/api/personal-heath/v1.0/file/getFile?fileName=b40ef5dSnipaste_2024-11-29_18-23-18.png', '1243@qq.com', 1, 1, 0, '2024-10-07 23:59:31');
 INSERT INTO `user` VALUES (10, 'meihua', '梅花', '14e1b600b1fd579f47433b88e8d85291', 'http://localhost:21090/api/personal-heath/v1.0/file/getFile?fileName=2c6fa89猫头鹰.png', '156456@qq.com', 2, 0, 0, '2024-10-07 23:59:31');
