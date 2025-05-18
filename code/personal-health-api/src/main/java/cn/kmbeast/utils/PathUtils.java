@@ -1,30 +1,24 @@
 package cn.kmbeast.utils;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
 public class PathUtils {
     public static String getClassLoadRootPath() {
-        String path = "";
+        String userDefinedPath = System.getProperty("custom.upload.dir");
+        if (userDefinedPath != null && new File(userDefinedPath).exists()) {
+            return userDefinedPath;
+        }
+
         try {
-            String prePath = URLDecoder.decode(PathUtils.class.getClassLoader().getResource("").getPath(),"utf-8").replace("/target/classes", "");
-            String osName = System.getProperty("os.name");
-            if (osName.toLowerCase().startsWith("mac")) {
-                // 苹果
-                path = prePath.substring(0, prePath.length() - 1);
-            } else if (osName.toLowerCase().startsWith("windows")) {
-                // windows
-                path = prePath.substring(1, prePath.length() - 1);
-            } else if(osName.toLowerCase().startsWith("linux") || osName.toLowerCase().startsWith("unix")) {
-                // unix or linux
-                path = prePath.substring(0, prePath.length() - 1);
-            } else {
-                path = prePath.substring(1, prePath.length() - 1);
-            }
+            // 尝试获取 classpath 路径（只用于开发）
+            String path = PathUtils.class.getProtectionDomain()
+                    .getCodeSource().getLocation().getPath();
+            return URLDecoder.decode(path, "utf-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
+            return System.getProperty("user.dir");
         }
-        return path;
     }
-
 }

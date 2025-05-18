@@ -44,7 +44,8 @@ public class FileController {
         try {
             if (uploadFile(multipartFile, fileName)) {
                 rep.put("code", 200);
-                rep.put("data", "http://localhost:" + PORT +API+ "/file/getFile?fileName=" + fileName);
+//                rep.put("data", "http://localhost:" + PORT +API+ "/file/getFile?fileName=" + fileName);
+                rep.put("data", "http://myimgs.openbase.store:" + PORT +API+ "/file/getFile?fileName=" + fileName);
                 return rep;
             }
         } catch (IOException e) {
