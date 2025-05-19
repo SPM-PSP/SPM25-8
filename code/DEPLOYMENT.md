@@ -1,4 +1,4 @@
-## 部署指南
+## 用户部署指南
 
 > 本文档适用于 **Personal-Health** 前后端分离项目的本地或服务器部署。项目采用 `Spring Boot + MyBatis + MySQL` 后端，`Vue 2.x` 前端，并提供官方 **Docker** 镜像与 `docker-compose` 一键运行方式。
 
