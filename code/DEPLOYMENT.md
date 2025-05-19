@@ -10,7 +10,7 @@
 2. **运行环境**：
    * JDK 8（后端编译/运行需要）
    * Maven 3.6+（若不使用 Docker）
-   * Node.js 14+/npm 6+（前端构建需要，若不使用 Docker）
+   * Node.js 14。16.0+/npm 6+（前端构建需要，若不使用 Docker）
    * MySQL 5.7/8.0（已在脚本中使用 `utf8mb4` 字符集）
    * Docker 20.10+ 与 Docker Compose 1.29+（推荐使用官方镜像部署）
 3. **端口占用**：
